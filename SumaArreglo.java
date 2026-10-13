@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 
-public class SumaArreglo extends Thread {
+public class SumaArreglo implements Runnable {
     static int hilos = 1;
     static int[] resultado = null;
     static int[] arreglo = null;
@@ -30,7 +30,7 @@ public class SumaArreglo extends Thread {
 
         System.out.println(
             "Thread local id " + id
-            + " Thread Id: " + this.getId()
+            + " Thread Id: " + Thread.currentThread().getId()
             + " Suma Local: " + suma);
 
         resultado[id] = suma;
@@ -38,6 +38,7 @@ public class SumaArreglo extends Thread {
 
     static void inicializarArreglo(int[] arreglo, int n) {
         Random azar = new Random();
+
         for (int i = 0; i < arreglo.length; i++) {
             arreglo[i] = azar.nextInt(n);
         }
@@ -78,11 +79,11 @@ public class SumaArreglo extends Thread {
                 sumaFinal = sumaFinal + resultado[i];
             } catch (InterruptedException e) {
                 System.out.println("Error: en la espera del hilo");
-}
-        }
+	    }
+         }
 
         System.out.println("Suma Thread: " + sumaFinal);
-        }
+     }
  }
 
 
