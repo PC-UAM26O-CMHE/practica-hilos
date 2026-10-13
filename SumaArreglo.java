@@ -1,11 +1,17 @@
 import java.util.Arrays;
 import java.util.Random;
 
-public class SumaArreglo {
+public class SumaArreglo extends Thread {
     static int[] arreglo = null;
     SumaArreglo(int n) {
          arreglo = new int[n];
     }
+
+    @Override
+    public void run() {
+
+    }
+
 
     public int sumar() {
         int suma = 0;
