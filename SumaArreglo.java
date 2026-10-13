@@ -9,6 +9,25 @@ public class SumaArreglo extends Thread {
 
     @Override
     public void run() {
+        int suma = 0;
+	int tam = arreglo.length / hilos;
+	int resto = arreglo.length % hilos;
+	int ini = id * tam;
+	int fin = ini + tam;
+
+        for (int i = ini; i < fin; i++) {
+ 	    suma = suma + arreglo[i];
+        }
+
+        if (resto > id) {
+
+           suma = suma + arreglo[(arreglo.length - 1) - id];
+	 }
+
+         resultado[id] = suma;
+}
+
+
 
     }
 
