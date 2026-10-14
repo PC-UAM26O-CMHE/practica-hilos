@@ -68,7 +68,7 @@ public class SumaArreglo implements Runnable {
         imprimir(arreglo);
 
         for (int i = 0; i < hilos; i++) {
-            trabajadores[i] = new SumaArreglo(i);
+            trabajadores[i] = new Thread(new SumaArreglo(i));
             trabajadores[i].start();
         }
 
