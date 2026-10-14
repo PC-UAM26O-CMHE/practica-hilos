@@ -45,16 +45,130 @@ Este comando crea un arreglo de 20 elementos, muestra sus valores y calcula la s
 
 ### Descripción
 
-En esta parte se modifica la clase `SumaArreglo` para que herede de `Thread`, con el objetivo de preparar el programa para ejecutar el cálculo de la suma mediante hilos.
+En esta parte se modifica la clase `SumaArreglo` para que herede de la clase `Thread` y pueda ejecutar el cálculo de la suma mediante varios hilos.
 
-Se sobrescribe el método `run()`, que contendrá el trabajo realizado por cada hilo.
+Cada hilo se encargará de sumar una parte del arreglo. El hilo principal esperará a que los trabajadores terminen mediante el método `join()` y después sumará los resultados parciales.
 
 ### Conceptos trabajados
 
 - Herencia de la clase `Thread`.
-- Sobrescritura del método `run()` mediante `@Override`.
-- Diferencia entre el hilo principal y los hilos creados por el programa.
+- Sobrescritura del método `run()`.
+- Inicio de los hilos mediante `start()`.
+- Espera de los hilos mediante `join()`.
+- División del arreglo entre varios hilos.
+- Almacenamiento de las sumas parciales en un arreglo compartido.
 
-### Estado actual
+### Compilación
 
+```bash
+javac SumaArreglo.java
+```
+
+### Ejecución
+
+```bash
+java SumaArreglo 20 4
+```
+
+El programa recibe el tamaño del arreglo y la cantidad de hilos que se utilizarán.
+
+### Estado
+
+En desarrollo.
+
+---
+
+## Tercera parte: Creación de tareas mediante Runnable
+
+### Descripción
+
+En esta parte se modifica la clase `SumaArreglo` para que implemente la interfaz `Runnable`.
+
+A diferencia de la solución anterior, el objeto `SumaArreglo` representa una tarea y no directamente un hilo. Para ejecutar cada tarea, se crea un objeto `Thread` al que se le pasa la tarea correspondiente.
+
+Cada tarea calculará una suma parcial del arreglo. El hilo principal esperará a que terminen los trabajadores mediante `join()` y acumulará los resultados parciales.
+
+### Conceptos trabajados
+
+- Implementación de la interfaz `Runnable`.
+- Sobrescritura del método `run()`.
+- Diferencia entre una tarea y un hilo.
+- Creación de objetos `Thread` a partir de tareas.
+- Inicio y sincronización de los hilos mediante `start()` y `join()`.
+- Uso de un arreglo compartido para almacenar los resultados parciales.
+
+### Compilación
+
+```bash
+javac SumaArreglo.java
+```
+
+### Ejecución
+
+```bash
+java SumaArreglo 20 4
+```
+
+El programa recibe el tamaño del arreglo y la cantidad de hilos que se utilizarán.
+
+### Estado
+
+Pendiente de implementación.
+
+---
+
+## Cuarta parte: Tareas con resultado mediante Callable
+
+### Descripción
+
+En esta parte se modifica la clase `SumaArreglo` para que implemente la interfaz `Callable<Integer>`, que permite ejecutar tareas que devuelven un resultado de tipo entero.
+
+Las tareas se enviarán a un grupo de hilos administrado mediante `ExecutorService`. Cada tarea calculará una suma parcial y devolverá su resultado mediante `call()`.
+
+El hilo principal recuperará los resultados utilizando objetos `Future<Integer>` y el método `get()`, para finalmente calcular la suma total del arreglo.
+
+### Conceptos trabajados
+
+- Implementación de la interfaz `Callable<Integer>`.
+- Uso del método `call()` para devolver resultados.
+- Administración de hilos mediante `ExecutorService`.
+- Creación de un grupo fijo de hilos con `Executors.newFixedThreadPool()`.
+- Envío de tareas mediante `submit()`.
+- Recuperación de resultados mediante `Future<Integer>` y `get()`.
+- Cierre del grupo de hilos mediante `shutdown()`.
+
+### Compilación
+
+```bash
+javac SumaArreglo.java
+```
+
+### Ejecución
+
+```bash
+java SumaArreglo 20 4
+```
+
+El programa recibe el tamaño del arreglo y la cantidad de hilos que se utilizarán.
+
+### Estado
+
+Pendiente de implementación.
+
+---
+
+## Tecnologías utilizadas
+
+- Java.
+- Programación concurrente.
+- Clase `Thread`.
+- Interfaz `Runnable`.
+- Interfaz `Callable<Integer>`.
+- `ExecutorService` y `Future`.
+- Arreglos de enteros.
+- Generación de números aleatorios.
+
+## Observaciones
+
+Las tres soluciones concurrentes permiten estudiar distintas formas de ejecutar el cálculo de la suma de un arreglo. La solución con `Thread` representa el hilo mediante un objeto de la clase `SumaArreglo`; la solución con `Runnable` separa la tarea del hilo; y la solución con `Callable<Integer>` permite devolver resultados y administrarlos mediante `Future`.
 La clase ya hereda de `Thread` y cuenta con el método `run()`. La implementación del cálculo concurrente se desarrollará en los siguientes pasos de la práctica.
