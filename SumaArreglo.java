@@ -1,9 +1,14 @@
+import java.util.LinkedList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.Arrays;
 import java.util.Random;
 
-public class SumaArreglo implements Runnable {
+public class SumaArreglo implements Callable<Integer> {
     static int hilos = 1;
-    static int[] resultado = null;
     static int[] arreglo = null;
     private int id = -1;
 
@@ -13,7 +18,7 @@ public class SumaArreglo implements Runnable {
 
 
     @Override
-    public void run() {
+    public Integer call() throws Exception{
         int suma = 0;
         int tam = arreglo.length / hilos;
         int resto = arreglo.length % hilos;
@@ -33,7 +38,7 @@ public class SumaArreglo implements Runnable {
             + " Thread Id: " + Thread.currentThread().getId()
             + " Suma Local: " + suma);
 
-        resultado[id] = suma;
+        return suma;
     }
 
     static void inicializarArreglo(int[] arreglo, int n) {
@@ -49,8 +54,8 @@ public class SumaArreglo implements Runnable {
     }
 
     public static void main(String[] args) {
-        int n = 0;
         int sumaFinal = 0;
+        int n = 0;
 
         try {
             n = Integer.parseInt(args[0]);
@@ -61,28 +66,29 @@ public class SumaArreglo implements Runnable {
         }
 
         arreglo = new int[n];
-        Thread[] trabajadores = new Thread[hilos];
-        resultado = new int[hilos];
-
         inicializarArreglo(arreglo, 100);
         imprimir(arreglo);
 
+	LinkedList<Future<Integer>> valores = new LinkedList<>();
+        ExecutorService pool = Executors.newFixedThreadPool(hilos);
+
+
         for (int i = 0; i < hilos; i++) {
-            trabajadores[i] = new Thread(new SumaArreglo(i));
-            trabajadores[i].start();
+            Callable<Integer> tarea = new SumaArreglo(i);
+            Future<Integer> future = pool.submit(tarea);
+            valores.add(future);
         }
 
-        for (int i = 0; i < hilos; i++) {
+        for (Future<Integer> future : valores) {
             try {
-                trabajadores[i].join();
-
-                sumaFinal = sumaFinal + resultado[i];
-            } catch (InterruptedException e) {
-                System.out.println("Error: en la espera del hilo");
+                sumaFinal += future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                System.out.println("Error: al obtener el dato del hilo");
 	    }
          }
 
-        System.out.println("Suma Thread: " + sumaFinal);
+        System.out.println("La suma Callable es: " + sumaFinal);
+	pool.shutdown();
      }
  }
 
